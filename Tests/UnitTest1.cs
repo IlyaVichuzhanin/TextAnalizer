@@ -50,7 +50,12 @@ namespace Tests
         [Test]
         public void GetNumberOfChaptersTest()
         {
+            var wordFilePath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.Parent.FullName + "\\Tests\\TestFiles\\TestFile2.docx";
+            var wordDocument2 = WordprocessingDocument.Open(wordFilePath, false);
+            var chapterExtractor2 = new ChapterExtractor(wordDocument2);
+
             Assert.AreEqual(7, ChapterExtractor.GetNumberOfChapters());
+            Assert.AreEqual(3, chapterExtractor2.GetNumberOfChapters());
         }
         [Test]
         public void IsChapterParagraphTest()
