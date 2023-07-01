@@ -31,7 +31,7 @@ namespace TextAnalizer
 
         public static string GetChapterTitlte(Paragraph paragraph)
         {
-            var stringPattern = "^[гГ]лава[ [0-9]*[.!?\\\\-]";
+            var stringPattern = "^[гГ]лава[ [0-9]*[.,!\\s?\\\\\\\\-]*";
             if (paragraph.ParagraphProperties.NumberingProperties != null)
                 return paragraph.InnerText;
             else
