@@ -91,11 +91,26 @@ namespace TextAnalizer
         private void btnSendEmail_Click(object sender, EventArgs e)
         {
             var message = ReportCreator.GetHTMLReport(listChapters);
-            var xmlReport = ReportCreator.GetXMLReport(listChapters);
             var emailAdress = textBox1.Text.Trim();
-            EmailSender.SendEmail(emailAdress, message, xmlReport);
-            label2.Text = "";
-            textBox1.Text = "";
+            if (!EmailSender.EmailIsValid(emailAdress))
+            {
+                label2.Text = "Введен некорректный адрес электронной почты отправка не возможна!";
+                label2.ForeColor = Color.Red;
+            }
+            else
+            {
+                var sendSuccessfully = EmailSender.SendEmail(emailAdress, message);
+                if (sendSuccessfully)
+                {
+                    label2.Text = "Отправка письма произошла успешно";
+                    label2.ForeColor = Color.Green;
+                }
+                else
+                {
+                    label2.Text = "Письмо не было отправлено. Проверьте адрес электронной почты!";
+                    label2.ForeColor = Color.Red;
+                }
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -103,7 +118,7 @@ namespace TextAnalizer
             var emaiAdress = textBox1.Text.Trim();
             if (!EmailSender.EmailIsValid(emaiAdress))
             {
-                label2.Text = "Введен некорректный адрес электронной почты";
+                label2.Text = "Адрес не соответствует формату";
                 label2.ForeColor = Color.Red;
             }
             else

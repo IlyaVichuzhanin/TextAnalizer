@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace TextAnalizer
 {
     public class EmailSender
     {
-        public static void SendEmail(string emailAdress, string message, XmlDocument report)
+        public static bool SendEmail(string emailAdress, string message)
         { 
 
             SmtpClient client = new SmtpClient();
@@ -32,16 +33,23 @@ namespace TextAnalizer
             mailMessage.From = new MailAddress("testemailpmi@mail.ru");
             mailMessage.To.Add(emailAdress);
             mailMessage.Body = message;
-            var reportFile = GetReportAsAttechment(report);
-            mailMessage.Attachments.Add(reportFile);
+            //var reportFile = GetReportAsAttechment(report);
+            mailMessage.Attachments.Add(Attachment.CreateAttachmentFromString(message, "Report.xml"));
             mailMessage.Subject = "Отчет о главах в файле";
             mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
             mailMessage.BodyTransferEncoding = System.Net.Mime.TransferEncoding.Base64;
             mailMessage.IsBodyHtml = true;
             mailMessage.Priority = MailPriority.Normal;
             mailMessage.SubjectEncoding = System.Text.Encoding.UTF8;
-
-            client.Send(mailMessage);
+            try
+            {
+                client.Send(mailMessage);
+                return true;
+            }
+            catch (SmtpFailedRecipientException ex)
+            {
+                return false;
+            }
         }
         public static bool EmailIsValid(string emaildress)
         {
@@ -55,12 +63,6 @@ namespace TextAnalizer
                 }
             }
             return false;
-        }
-        public static Attachment GetReportAsAttechment(XmlDocument report)
-        { 
-            var reportBytes = Encoding.Default.GetBytes(report.OuterXml);
-            var attach = new Attachment(new MemoryStream(reportBytes), "Report.xml");
-            return attach;
         }
 
     }

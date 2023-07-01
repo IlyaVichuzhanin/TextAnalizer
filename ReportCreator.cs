@@ -65,6 +65,7 @@ namespace TextAnalizer
             XmlDocument document = new XmlDocument();
             document.LoadXml(stringwriter.ToString());
 
+
             return document;
         }
         public static string GetHTMLReport(ListView listView)
