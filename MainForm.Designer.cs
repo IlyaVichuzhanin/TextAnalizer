@@ -38,7 +38,7 @@
             // 
             // btnSelectFile
             // 
-            this.btnSelectFile.Location = new System.Drawing.Point(107, 320);
+            this.btnSelectFile.Location = new System.Drawing.Point(99, 86);
             this.btnSelectFile.Name = "btnSelectFile";
             this.btnSelectFile.Size = new System.Drawing.Size(264, 62);
             this.btnSelectFile.TabIndex = 0;
@@ -50,7 +50,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 483);
+            this.ClientSize = new System.Drawing.Size(469, 253);
             this.Controls.Add(this.btnSelectFile);
             this.Name = "MainForm";
             this.Text = "Main form";
