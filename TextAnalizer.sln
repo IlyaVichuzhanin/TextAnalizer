@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextAnalizer", "TextAnalizer.csproj", "{6288770A-4DD1-48F4-A452-63089A48D07B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{5B08831E-DF94-4D96-A6AA-B2E40AF1041A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6288770A-4DD1-48F4-A452-63089A48D07B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6288770A-4DD1-48F4-A452-63089A48D07B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6288770A-4DD1-48F4-A452-63089A48D07B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6288770A-4DD1-48F4-A452-63089A48D07B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B08831E-DF94-4D96-A6AA-B2E40AF1041A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B08831E-DF94-4D96-A6AA-B2E40AF1041A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B08831E-DF94-4D96-A6AA-B2E40AF1041A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B08831E-DF94-4D96-A6AA-B2E40AF1041A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EDC65742-B0B3-41A3-89C5-3451E474FDED}
+	EndGlobalSection
+EndGlobal
