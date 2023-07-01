@@ -17,6 +17,7 @@ using DocumentFormat.OpenXml.Features;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Color = System.Drawing.Color;
 
 namespace TextAnalizer
 {
@@ -40,6 +41,7 @@ namespace TextAnalizer
             label1.Text = chapterExtractor.GetChapterDiscription();
             ChapterVMs = chapterExtractor.GetChapterVMs();
             DisplayChapters();
+            label2.Text = "";
         }
         public void DisplayChapters()
         {
@@ -66,8 +68,13 @@ namespace TextAnalizer
 
         private void btnSaveHTMLReport_Click(object sender, EventArgs e)
         {
-
-
+            if (SaveFileDialog.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = SaveFileDialog.FileName;
+            filename=filename + ".html";
+            var htmlReport = ReportCreator.GetHTMLReport(listChapters);
+            File.WriteAllText(filename, htmlReport);
+            SaveFileDialog.FileName = "";
         }
 
         private void btnSaveXMLReport_Click(object sender, EventArgs e)
@@ -75,12 +82,35 @@ namespace TextAnalizer
             if (SaveFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
             string filename = SaveFileDialog.FileName;
-            ReportCreator.ExportListItemToXML(listChapters, filename);
+            filename = filename + ".xml";
+            var xmlReport = ReportCreator.GetXMLReport(listChapters);
+            xmlReport.Save(filename);
+            SaveFileDialog.FileName = "";
         }
 
         private void btnSendEmail_Click(object sender, EventArgs e)
         {
-            EmailSender.SendEmail();
+            var message = ReportCreator.GetHTMLReport(listChapters);
+            var xmlReport = ReportCreator.GetXMLReport(listChapters);
+            var emailAdress = textBox1.Text.Trim();
+            EmailSender.SendEmail(emailAdress, message, xmlReport);
+            label2.Text = "";
+            textBox1.Text = "";
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            var emaiAdress = textBox1.Text.Trim();
+            if (!EmailSender.EmailIsValid(emaiAdress))
+            {
+                label2.Text = "Введен некорректный адрес электронной почты";
+                label2.ForeColor = Color.Red;
+            }
+            else
+            {
+                label2.Text = "Адрес соответствует формату";
+                label2.ForeColor = Color.Green;
+            }
         }
     }
 }

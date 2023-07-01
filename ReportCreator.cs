@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office2019.Excel.RichData2;
+﻿using DocumentFormat.OpenXml.Linq;
+using DocumentFormat.OpenXml.Office2019.Excel.RichData2;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,80 +15,84 @@ namespace TextAnalizer
 {
     public class ReportCreator
     {
-        public static void ExportListItemToXML(ListView listView, string fileName)
+        public static XmlDocument GetXMLReport(ListView listView)
         {
-            XmlWriter writer = null;
+            StringWriter stringwriter = new StringWriter();
+            XmlTextWriter xmlTextWriter = new XmlTextWriter(stringwriter);
+            xmlTextWriter.Formatting = Formatting.Indented;
 
-            try
+            //XmlWriterSettings settings = new XmlWriterSettings();
+            //settings.Indent = true;
+            //settings.IndentChars = ("\t");
+            //settings.OmitXmlDeclaration = true;
+            //settings.Encoding = Encoding.UTF8;
+
+            //writer = XmlWriter.Create(fileName, settings);
+            // Запись комментария:
+
+            //var x = XmlWriter.Create(fileName, settings);
+
+            xmlTextWriter.WriteStartElement("table");
+            xmlTextWriter.WriteStartElement("tbody");
+            // Запись заголовка таблицы HTML:
+            xmlTextWriter.WriteStartElement("tr");
+
+
+            xmlTextWriter.WriteElementString("th", "Номер главы");
+            xmlTextWriter.WriteElementString("th", "Название главы");
+            xmlTextWriter.WriteElementString("th", "Количество параграфов");
+            xmlTextWriter.WriteElementString("th", "Количество символов");
+
+            xmlTextWriter.WriteEndElement();  // закрытие тега tr
+                                              // Запись всех строк:
+            foreach (ListViewItem item in listView.Items)
             {
-                XmlWriterSettings settings = new XmlWriterSettings();
-                settings.Indent = true;
-                settings.IndentChars = ("\t");
-                settings.OmitXmlDeclaration = true;
-                settings.Encoding = Encoding.UTF8;
-
-                writer = XmlWriter.Create(fileName, settings);
-                // Запись комментария:
-                writer.WriteComment(" Пример генерации файла " + fileName + " из таблицы DataGridView ");
-                writer.WriteStartElement("table");
-                writer.WriteStartElement("tbody");
-                // Запись заголовка таблицы HTML:
-                writer.WriteStartElement("tr");
-
-
-                writer.WriteElementString("th", "Номер главы");
-                writer.WriteElementString("th", "Название главы");
-                writer.WriteElementString("th", "Количество параграфов");
-                writer.WriteElementString("th", "Количество символов");
-
-                writer.WriteEndElement();  // закрытие тега tr
-                                           // Запись всех строк:
-                foreach (ListViewItem item in listView.Items)
+                xmlTextWriter.WriteStartElement("tr");
+                foreach (ListViewSubItem value in item.SubItems)
                 {
-                    writer.WriteStartElement("tr");
-                    foreach (ListViewSubItem value in item.SubItems)
-                    {
-                        if (value.Text != null)
-                            writer.WriteElementString("td", value.Text.ToString());
-                        else
-                            writer.WriteElementString("td", " ");
-                    }
-                    writer.WriteEndElement();  // закрытие тега tr
+                    if (value.Text != null)
+                        xmlTextWriter.WriteElementString("td", value.Text.ToString());
+                    else
+                        xmlTextWriter.WriteElementString("td", " ");
                 }
-                writer.WriteEndElement();  // закрытие тега tbody
-                writer.WriteEndElement();  // закрытие тега table
-                writer.Flush();
+                xmlTextWriter.WriteEndElement();  // закрытие тега tr
             }
-            finally
-            {
-                if (writer != null)
-                    writer.Close();
-            }
+            xmlTextWriter.WriteEndElement();  // закрытие тега tbody
+            xmlTextWriter.WriteEndElement();  // закрытие тега table
+            xmlTextWriter.Flush();
+
+
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(stringwriter.ToString());
+
+            return document;
         }
-        public static void ExportListItemToHTML(ListView listView, string fileName)
+        public static string GetHTMLReport(ListView listView)
         {
-            string html = "<table cellpadding='5' cellspacing='0' style='border: 1px solid #ccc;font-size: 9pt;font-family:arial'>";
+            string htmlReport = "<table cellpadding='5' cellspacing='0' style='border: 1px solid #ccc;font-size: 9pt;font-family:arial'>";
             //Adding HeaderRow.
-            html += "<tr>";
+            htmlReport += "<tr>";
 
-            html += "<th style='background-color: #B8DBFD;border: 1px solid #ccc'>" + "Номер главы" + "</th>";
-            html += "<th style='background-color: #B8DBFD;border: 1px solid #ccc'>" + "Название главы" + "</th>";
-            html += "<th style='background-color: #B8DBFD;border: 1px solid #ccc'>" + "Количество параграфов" + "</th>";
-            html += "<th style='background-color: #B8DBFD;border: 1px solid #ccc'>" + "Количество символов" + "</th>";
+            htmlReport += "<th style='background-color: #B8DBFD;border: 1px solid #ccc'>" + "Номер главы" + "</th>";
+            htmlReport += "<th style='background-color: #B8DBFD;border: 1px solid #ccc'>" + "Название главы" + "</th>";
+            htmlReport += "<th style='background-color: #B8DBFD;border: 1px solid #ccc'>" + "Количество параграфов" + "</th>";
+            htmlReport += "<th style='background-color: #B8DBFD;border: 1px solid #ccc'>" + "Количество символов" + "</th>";
 
-            html += "</tr>";
+            htmlReport += "</tr>";
             //Adding DataRow.
             foreach (ListViewItem item in listView.Items)
             {
-                html += "<tr>";
+                htmlReport += "<tr>";
                 foreach (ListViewSubItem value in item.SubItems)
                 {
-                    html += "<td style='width:120px;border: 1px solid #ccc'>" + value.Text.ToString() + "</td>";
+                    htmlReport += "<td style='width:120px;border: 1px solid #ccc'>" + value.Text.ToString() + "</td>";
                 }
-                html += "</tr>";
+                htmlReport += "</tr>";
             }
             //Table end.
-            html += "</table>";
+            htmlReport += "</table>";
+            return htmlReport;
+            
         }
     }
 }

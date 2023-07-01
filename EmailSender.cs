@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -7,12 +9,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace TextAnalizer
 {
     public class EmailSender
     {
-        public static void SendEmail()
+        public static void SendEmail(string emailAdress, string message, XmlDocument report)
         { 
 
             SmtpClient client = new SmtpClient();
@@ -27,8 +30,10 @@ namespace TextAnalizer
             //82.yc2RbN-diPQ_
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress("testemailpmi@mail.ru");
-            mailMessage.To.Add("vichuzhanin.ilya@gmail.com");
-            mailMessage.Body = "Разметка";
+            mailMessage.To.Add(emailAdress);
+            mailMessage.Body = message;
+            var reportFile = GetReportAsAttechment(report);
+            mailMessage.Attachments.Add(reportFile);
             mailMessage.Subject = "Отчет о главах в файле";
             mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
             mailMessage.BodyTransferEncoding = System.Net.Mime.TransferEncoding.Base64;
@@ -50,6 +55,12 @@ namespace TextAnalizer
                 }
             }
             return false;
+        }
+        public static Attachment GetReportAsAttechment(XmlDocument report)
+        { 
+            var reportBytes = Encoding.Default.GetBytes(report.OuterXml);
+            var attach = new Attachment(new MemoryStream(reportBytes), "Report.xml");
+            return attach;
         }
 
     }

@@ -19,6 +19,7 @@ namespace TextAnalizer
 
         private void btnSelectFile_Click(object sender, EventArgs e)
         {
+            openFileDialog1.FileName = "";
             openFileDialog1.Filter = @"All Files|*.docx;*.doc;*.docm;*.dotx;.*|Word File (.docx ,.doc)|*.docx;*.doc";
             openFileDialog1.ShowDialog();
             var filePath = openFileDialog1.FileName;
